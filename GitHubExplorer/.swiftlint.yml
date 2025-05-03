@@ -1,0 +1,56 @@
+disabled_rules:
+  - trailing_whitespace
+  - force_cast
+  - type_body_length
+  - identifier_name
+  - function_body_length
+
+opt_in_rules:
+  - empty_count
+  - fatal_error_message
+  - force_unwrapping
+  - unowned_variable_capture
+  - closure_end_indentation
+  - redundant_nil_coalescing
+
+analyzer_rules:
+  - explicit_self
+
+included:
+  - GitHubExplorer/Application
+  - Core
+  - Features
+
+excluded:
+  - .build
+  - Generated
+  - Pods
+  - Carthage
+  
+vertical_whitespace:
+  warning: 1
+  error: 2
+
+line_length:
+  warning: 120
+  error: 150
+  ignores_comments: true
+  ignores_urls: true
+
+file_length:
+  warning: 400
+  error: 600
+  ignore_comment_only_lines: true
+
+type_name:
+  min_length: 3
+  max_length: 40
+
+function_parameter_count:
+  warning: 5
+  error: 7
+
+cyclomatic_complexity:
+  ignores_case_statements: true
+  warning: 10
+  error: 20

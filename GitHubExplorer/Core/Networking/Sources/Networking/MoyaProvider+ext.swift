@@ -1,0 +1,89 @@
+// The Swift Programming Language
+// https://docs.swift.org/swift-book
+
+import Moya
+import Foundation
+import Alamofire
+
+public class DefaultAlamofireManager: Alamofire.Session, @unchecked Sendable {
+    public static let sharedManager: Session = {
+        let configuration = URLSessionConfiguration.default
+        configuration.headers = .default
+        configuration.timeoutIntervalForRequest = 30 // as seconds, you can set your request timeout
+        configuration.timeoutIntervalForResource = 30 // as seconds, you can set your resource timeout
+        configuration.requestCachePolicy = .useProtocolCachePolicy
+        return Session(configuration: configuration)
+    }()
+}
+
+extension MoyaProvider {
+    public func baseRequest<T: Decodable>(
+        _ target: Target,
+        type: T.Type
+    ) async throws -> T {
+        return try await withUnsafeThrowingContinuation { continuation in
+            self.request(target) { result in
+                switch result {
+                case .success(let response):
+                    do {
+                        let filtered = try response.filterSuccessfulStatusCodes()
+                        let decoded = try JSONDecoder().decode(T.self, from: filtered.data)
+                        continuation.resume(returning: decoded)
+
+                    } catch let moyaError as MoyaError {
+                        let error = self.handleMoyaError(moyaError)
+                        continuation.resume(throwing: error)
+
+                    } catch let decodingError {
+                        continuation.resume(throwing: APIError.decodingError)
+                    }
+
+                case .failure(let moyaError):
+                    let error = self.handleMoyaError(moyaError)
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
+    private func handleMoyaError(_ error: MoyaError) -> APIError {
+        if case let .underlying(underlyingError, _) = error {
+            if let afError = underlyingError as? AFError,
+               case let .sessionTaskFailed(sessionError) = afError,
+               let nsError = sessionError as NSError?,
+               nsError.domain == NSURLErrorDomain {
+                return .networkError
+            }
+        }
+        
+        if case let .statusCode(response) = error {
+            switch response.statusCode {
+            case 400:
+                return .serverError(statusCode: 400, message: "Bad Request. The server could not understand the request.")
+            case 401:
+                return .unauthorized
+            case 403:
+                return .serverError(statusCode: 403, message: "Access is forbidden.")
+            case 404:
+                return .serverError(statusCode: 404, message: "The requested resource was not found.")
+            case 408:
+                return .serverError(statusCode: 408, message: "Request timed out.")
+            case 422:
+                return .serverError(statusCode: 422, message: "Unprocessable Entity.")
+            case 500:
+                return .serverError(statusCode: 500, message: "Internal Server Error.")
+            case 502:
+                return .serverError(statusCode: 502, message: "Bad Gateway.")
+            case 503:
+                return .serverError(statusCode: 503, message: "Service Unavailable.")
+            case 504:
+                return .serverError(statusCode: 504, message: "Gateway Timeout.")
+            default:
+                return .unknown(error)
+            }
+        }
+        return .unknown(error)
+    }
+}
+
+
