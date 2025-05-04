@@ -4,14 +4,21 @@
 import Moya
 import Foundation
 import Alamofire
+import Combine
 
 public class DefaultAlamofireManager: Alamofire.Session, @unchecked Sendable {
     public static let sharedManager: Session = {
         let configuration = URLSessionConfiguration.default
         configuration.headers = .default
-        configuration.timeoutIntervalForRequest = 30 // as seconds, you can set your request timeout
-        configuration.timeoutIntervalForResource = 30 // as seconds, you can set your resource timeout
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 30
         configuration.requestCachePolicy = .useProtocolCachePolicy
+        
+        // Add URL cache configuration
+        let memoryCapacity = 50 * 1024 * 1024 // 50 MB
+        let diskCapacity = 100 * 1024 * 1024 // 100 MB
+        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: "github_explorer_cache")
+        configuration.urlCache = cache
         return Session(configuration: configuration)
     }()
 }
@@ -43,6 +50,22 @@ extension MoyaProvider {
                     continuation.resume(throwing: error)
                 }
             }
+        }
+    }
+    
+    public func baseRequestWithRetry<T: Decodable>(
+        _ target: Target,
+        type: T.Type,
+        retries: Int = 2,
+        retryDelay: TimeInterval = 1.0
+    ) async throws -> T {
+        do {
+            return try await baseRequest(target, type: type)
+        } catch let error as APIError where error.isRetriable && retries > 0 {
+            try await _Concurrency.Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
+            return try await baseRequestWithRetry(target, type: type, retries: retries - 1, retryDelay: retryDelay * 1.5)
+        } catch {
+            throw error
         }
     }
     
@@ -79,10 +102,10 @@ extension MoyaProvider {
             case 504:
                 return .serverError(statusCode: 504, message: "Gateway Timeout.")
             default:
-                return .unknown(error)
+                return .unknown(error.localizedDescription)
             }
         }
-        return .unknown(error)
+        return .unknown(error.localizedDescription)
     }
 }
 

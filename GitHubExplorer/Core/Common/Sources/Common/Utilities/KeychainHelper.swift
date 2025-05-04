@@ -13,25 +13,27 @@ public class KeychainHelper: @unchecked Sendable {
 
     public init() {}
 
-    public func save(key: String, value: String) {
-        let data = value.data(using: .utf8)!
+    public func save(key: String, value: String) throws {
+        guard let data = value.data(using: .utf8) else {
+            throw KeychainError.dataConversionError
+        }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
             kSecValueData as String: data
         ]
 
-        // Xóa dữ liệu cũ nếu tồn tại
+        // Delete existing data if present
         SecItemDelete(query as CFDictionary)
 
-        // Lưu dữ liệu mới
+        // Save new data
         let status = SecItemAdd(query as CFDictionary, nil)
-        if status != errSecSuccess {
-            print("Error saving to Keychain: \(status)")
+        guard status == errSecSuccess else {
+            throw KeychainError.saveFailure(status)
         }
     }
 
-    public func read(key: String) -> String? {
+    public func read(key: String) throws -> String {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,
@@ -41,12 +43,14 @@ public class KeychainHelper: @unchecked Sendable {
 
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
-        if status == errSecSuccess, let data = item as? Data {
-            return String(data: data, encoding: .utf8)
-        } else {
-            print("Error reading from Keychain: \(status)")
-            return nil
+        guard status == errSecSuccess else {
+            throw KeychainError.readFailure(status)
         }
+        guard let data = item as? Data,
+              let string = String(data: data, encoding: .utf8) else {
+            throw KeychainError.dataConversionError
+        }
+        return string
     }
 
     public func delete(key: String) {
@@ -55,5 +59,27 @@ public class KeychainHelper: @unchecked Sendable {
             kSecAttrAccount as String: key
         ]
         SecItemDelete(query as CFDictionary)
+    }
+}
+
+public enum KeychainError: Error, LocalizedError {
+    case saveFailure(OSStatus)
+    case readFailure(OSStatus)
+    case deleteFailure(OSStatus)
+    case itemNotFound
+    case dataConversionError
+    public var errorDescription: String? {
+        switch self {
+        case .saveFailure(let status):
+            return "Failed to save to Keychain: \(status)"
+        case .readFailure(let status):
+            return "Failed to read from Keychain: \(status)"
+        case .deleteFailure(let status):
+            return "Failed to delete from Keychain: \(status)"
+        case .itemNotFound:
+            return "Item not found in Keychain"
+        case .dataConversionError:
+            return "Failed to convert data"
+        }
     }
 }

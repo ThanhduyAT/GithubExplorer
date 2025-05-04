@@ -10,7 +10,7 @@ import Moya
 import Networking
 
 struct UserApiClientImpl: UserApiClient {
-    
+
     typealias Target = UserTargetBuilder
 
     // Moya provider for making network requests
@@ -42,7 +42,7 @@ struct UserApiClientImpl: UserApiClient {
     // MARK: - API Methods
 
     /// Fetch a list of users based on the provided request parameters
-    func fetchUserList(request: UserListRequest) async throws -> [UserListResponse] {
+    func getUsers(request: UserListRequest) async throws -> [UserListResponse] {
         let target = Target(operation: .fetchUserList(request: request), baseURL: baseURL)
         return try await moyaProvider.baseRequest(target, type: [UserListResponse].self)
     }

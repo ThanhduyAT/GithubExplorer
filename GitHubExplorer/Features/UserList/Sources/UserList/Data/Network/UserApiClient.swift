@@ -8,6 +8,6 @@
 import Foundation
 
 public protocol UserApiClient {
-    func fetchUserList(request: UserListRequest) async throws -> [UserListResponse]
+    func getUsers(request: UserListRequest) async throws -> [UserListResponse]
     func getUserDetail(userName: String) async throws -> UserDetailResponse
 }

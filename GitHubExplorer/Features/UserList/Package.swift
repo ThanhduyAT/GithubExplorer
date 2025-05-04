@@ -17,6 +17,7 @@ let package = Package(
         .package(path: "../../Core/Common"),
         .package(url: "https://github.com/hmlongco/Factory.git", from: "2.3.1"),
         .package(url: "https://github.com/onevcat/Kingfisher.git", from: "8.3.2"),
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins", from: "0.59.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,6 +29,9 @@ let package = Package(
                 "Common",
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "Kingfisher", package: "Kingfisher")
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
             ]
         ),
         .testTarget(

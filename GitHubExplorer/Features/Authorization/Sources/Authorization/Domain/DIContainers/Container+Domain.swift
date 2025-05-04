@@ -8,7 +8,7 @@
 import Foundation
 import Factory
 
-extension Container {    
+extension Container {
     var loginUseCase: Factory<LoginUseCase> {
         self {
             LoginUseCaseImpl(authRepository: self.authRepository())

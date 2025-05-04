@@ -11,10 +11,10 @@ import Moya
 // MARK: - UserTargetBuilder
 
 struct UserTargetBuilder: TargetType, AccessTokenAuthorizable {
-    
+
     let operation: OperationType
     var baseURL: URL
-    
+
     // MARK: - Path
 
     // Define the path for each operation
@@ -26,7 +26,7 @@ struct UserTargetBuilder: TargetType, AccessTokenAuthorizable {
             return "/users/\(userName)"
         }
     }
-    
+
     // MARK: - HTTP Method
 
     var method: Moya.Method {
@@ -35,7 +35,7 @@ struct UserTargetBuilder: TargetType, AccessTokenAuthorizable {
             return .get
         }
     }
-    
+
     // MARK: - Task
 
     var task: Moya.Task {
@@ -52,13 +52,13 @@ struct UserTargetBuilder: TargetType, AccessTokenAuthorizable {
             return .requestPlain
         }
     }
-    
+
     // MARK: - Validation
 
     var validationType: Moya.ValidationType {
         .none
     }
-    
+
     // MARK: - Headers
 
     public var headers: [String: String]? {

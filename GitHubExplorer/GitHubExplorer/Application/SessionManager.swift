@@ -25,11 +25,19 @@ extension SessionManager: SessionManaging {
     }
     
     func checkLoggedIn() {
-        let token = AuthenticationService().getToken()
-        if token != nil {
+        if checkAccessToken() {
             isLoggedIn = true
             return
         }
         isLoggedIn = false
+    }
+    
+    private func checkAccessToken() -> Bool {
+        do {
+            let token = try AuthenticationService().getToken()
+            return token != nil
+        } catch {
+            return false
+        }
     }
 }

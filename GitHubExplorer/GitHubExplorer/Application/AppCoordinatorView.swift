@@ -13,9 +13,7 @@ struct AppCoordinatorView: View {
     var body: some View {
         Group {
             if session.isLoggedIn {
-                AuthCoordinatorView(authCoordinator: AuthCoordinator(sessionManager: session))
-
-//                HomeCoordinatorView()
+                HomeCoordinatorView()
             } else {
                 AuthCoordinatorView(authCoordinator: AuthCoordinator(sessionManager: session))
             }

@@ -9,8 +9,6 @@ import SwiftUI
 import Kingfisher
 
 struct UserCardView: View {
-    let id: String
-    
     let imageString: String
     let username: String
     let detailString: String
@@ -19,10 +17,13 @@ struct UserCardView: View {
         HStack(alignment: .center, spacing: 16) {
             KFImage(URL(string: imageString))
                 .placeholder {
-                    Image(systemName: "person.fill") // Replace with your local asset name
+                    Image(systemName: "person.fill")
                         .resizable()
                         .scaledToFit()
                 }
+                .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 120, height: 120)))
+                .cacheMemoryOnly()
+                .diskCacheExpiration(.days(7))
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 60, height: 60)
@@ -33,8 +34,7 @@ struct UserCardView: View {
                 )
             
             VStack(alignment: .leading, spacing: 8) {
-                // User Name
-                Text("\(username) ====> \(id)")
+                Text(username)
                     .font(.headline)
                     .foregroundColor(.primary)
                 
@@ -57,5 +57,5 @@ struct UserCardView: View {
 }
 
 #Preview {
-    UserCardView(id: "", imageString: "", username: "Thanh duy", detailString: "https://duy.test.com")
+    UserCardView(imageString: "", username: "Thanh duy", detailString: "https://duy.test.com")
 }

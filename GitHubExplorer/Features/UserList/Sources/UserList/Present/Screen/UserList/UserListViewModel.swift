@@ -15,7 +15,9 @@ class UserListViewModel {
     var sinceId: Int = 100
     var usersPerPage: Int = 20
     var error: Error?
-
+    
+    private var isRequestPending = false
+    private var debounceTask: Task<Void, Never>?
     private var usersUseCase: FetchUsersUseCase
 
     public init(factory: UserListFactory) {
@@ -23,8 +25,8 @@ class UserListViewModel {
     }
 
     func fetchUsers() async {
-        guard !isLoadingMore else { return }
-
+        guard !isLoadingMore && !isRequestPending else { return }
+        isRequestPending = true
         isLoadingMore = true
         let query = UserListQuery(since: String(sinceId), perPage: String(usersPerPage))
 
@@ -37,7 +39,30 @@ class UserListViewModel {
         } catch {
             self.error = error
         }
-
+        isRequestPending = false
+        isLoadingMore = false
+    }
+    
+    func fetchUsersDebounced(debounceTime: TimeInterval = 0.3) {
+        // Cancel previous debounce task if exists
+        debounceTask?.cancel()
+        
+        // Create new debounce task
+        debounceTask = Task {
+            do {
+                try await Task.sleep(nanoseconds: UInt64(debounceTime * 1_000_000_000))
+                if !Task.isCancelled && !isRequestPending {
+                    await fetchUsers()
+                }
+            } catch {
+                // Task was cancelled, do nothing
+            }
+        }
+    }
+    
+    func resetPagination() {
+        users = []
+        sinceId = 100
         isLoadingMore = false
     }
 }

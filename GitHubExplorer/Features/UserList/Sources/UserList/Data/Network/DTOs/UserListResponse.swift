@@ -15,7 +15,7 @@ public struct UserListResponse: Decodable {
     let url: String?
     let followersUrl: String?
     let followingUrl: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case login

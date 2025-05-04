@@ -84,7 +84,6 @@ struct UserDetailView: View {
 
     private var userCard: some View {
         UserCardView(
-            id: "",
             imageString: viewModel.user?.avatarUrl ?? "",
             username: viewModel.user?.login ?? "",
             detailString: viewModel.user?.location ?? ""

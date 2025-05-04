@@ -7,9 +7,9 @@
 
 import CommonUI
 import SwiftUI
+import Kingfisher
 
 struct UserListView: View {
-
     // MARK: - Dependencies
     @Environment(UserCoordinator.self) private var coordinator
 
@@ -27,8 +27,15 @@ struct UserListView: View {
         NavigationView {
             content
                 .navigationTitle("Github Users")
+                .refreshable {
+                    viewModel.resetPagination()
+                    await viewModel.fetchUsers()
+                }
                 .task {
                     await handleInitialLoadIfNeeded()
+                }
+                .onAppear {
+                    prefetchImages(for: viewModel.users)
                 }
                 .errorAlert(error: $viewModel.error)
         }
@@ -39,28 +46,10 @@ struct UserListView: View {
     private var content: some View {
         if viewModel.users.isEmpty && viewModel.isLoadingMore {
             // Skeleton loading
-            List {
-                ForEach(0..<5, id: \.self) { _ in
-                    UserCardSkeletonView()
-                        .redacted(reason: .placeholder)
-                        .shimmering()
-                }
-            }
-            .listStyle(.plain)
+            loadingStateView
         } else if viewModel.users.isEmpty {
             // Empty state
-            VStack(spacing: 16) {
-                Image(systemName: "person.crop.circle.badge.exclamationmark")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 80, height: 80)
-                    .foregroundColor(.gray)
-
-                Text("No users found.")
-                    .font(.headline)
-                    .foregroundColor(.gray)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            emptyStateView
         } else {
             // Loaded state
             List {
@@ -70,13 +59,53 @@ struct UserListView: View {
             .listStyle(.plain)
         }
     }
+    
+    // MARK: - Skeleton loading
+    private var loadingStateView: some View {
+        List {
+            ForEach(0..<5, id: \.self) { _ in
+                UserCardSkeletonView()
+                    .redacted(reason: .placeholder)
+                    .shimmering()
+            }
+        }
+        .listStyle(.plain)
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "person.crop.circle.badge.exclamationmark")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
+                .foregroundColor(.gray)
+
+            Text("No users found.")
+                .font(.headline)
+                .foregroundColor(.gray)
+            
+            Button(action: {
+                Task {
+                    viewModel.resetPagination()
+                    await viewModel.fetchUsers()
+                }
+            }) {
+                Label("Retry", systemImage: "arrow.clockwise")
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(8)
+            }
+            .padding(.top, 8)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 
     // MARK: - Sections
     private var userListSection: some View {
-        ForEach(viewModel.users.indices, id: \.self) { index in
-            let user = viewModel.users[index]
+        ForEach(viewModel.users, id: \.id) { user in
             UserCardView(
-                id: String(user.id),
                 imageString: user.avatarUrl,
                 username: user.login,
                 detailString: user.htmlUrl
@@ -85,7 +114,7 @@ struct UserListView: View {
                 coordinator.push(.userDetail(userName: user.login))
             }
             .onAppear {
-                handleItemAppear(index: index)
+                handleItemAppear(user: user)
             }
             .listRowSeparator(.hidden)
         }
@@ -108,11 +137,23 @@ struct UserListView: View {
         await viewModel.fetchUsers()
     }
 
-    private func handleItemAppear(index: Int) {
-        if index == viewModel.users.count - 1 {
-            Task {
-                await viewModel.fetchUsers()
-            }
+    private func handleItemAppear(user: User) {
+        if let index = viewModel.users.firstIndex(where: { $0.id == user.id }),
+           index == viewModel.users.count - 3 {
+            viewModel.fetchUsersDebounced()
+        }
+    }
+    
+    private func prefetchImages(for displayedUsers: [User], prefetchCount: Int = 5) {
+        // Calculate which images to prefetch
+        let currentIndex = displayedUsers.count
+        let endIndex = min(currentIndex + prefetchCount, viewModel.users.count)
+        
+        if currentIndex < endIndex {
+            let prefetchUrls = viewModel.users[currentIndex..<endIndex].compactMap { URL(string: $0.avatarUrl) }
+
+            // Prefetch images
+            ImagePrefetcher(urls: Array(prefetchUrls)).start()
         }
     }
 }

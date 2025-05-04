@@ -8,11 +8,10 @@
 import Foundation
 
 @MainActor
-@Observable
-class UserDetailViewModel {
+@Observable class UserDetailViewModel {
 
     // MARK: - Input
-    var userName: String
+    let userName: String
 
     // MARK: - Output
     var user: UserDetail?

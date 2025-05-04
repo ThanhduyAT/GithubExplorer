@@ -27,9 +27,7 @@ excluded:
   - Pods
   - Carthage
   
-vertical_whitespace:
-  warning: 1
-  error: 2
+vertical_whitespace: true
 
 line_length:
   warning: 120

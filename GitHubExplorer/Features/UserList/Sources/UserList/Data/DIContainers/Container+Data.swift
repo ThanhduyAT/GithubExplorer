@@ -12,9 +12,7 @@ import SwiftData
 import Moya
 
 // MARK: - Dependency Injection Container Extension
-
 extension Container {
-
     /// Provides an instance of `AuthenticationService`
     var authService: Factory<AuthenticationService> {
         self {
@@ -24,7 +22,11 @@ extension Container {
 
     /// Retrieves the latest stored access token from the authentication service
     var lastedToken: String? {
-        return self.authService().getToken()
+        do {
+            return try self.authService().getToken()
+        } catch {
+            return nil
+        }
     }
 
     /// Provides a configured `ModelContainer` for SwiftData persistence

@@ -36,7 +36,7 @@ extension AuthRepositoryImpl: AuthRepository {
         let result = try await apiClient.getAccessToken(request: request)
         if let accessToken = result.accessToken {
             print("accessToken", accessToken)
-            authService.saveToken(accessToken)
+            try authService.saveToken(accessToken)
         }
     }
 }

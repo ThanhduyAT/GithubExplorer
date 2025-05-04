@@ -13,14 +13,14 @@ import SwiftData
     var login: String
     var avatarUrl: String
     var htmlUrl: String
-    
+
     init(user: User) {
         self.id = user.id
         self.login = user.login
         self.avatarUrl = user.avatarUrl
         self.htmlUrl = user.htmlUrl
     }
-    
+
     func toDomain() -> User {
         return User(
             id: self.id,
