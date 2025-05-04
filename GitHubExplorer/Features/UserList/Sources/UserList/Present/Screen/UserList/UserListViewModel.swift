@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserListViewModel.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -15,7 +15,7 @@ class UserListViewModel {
     var sinceId: Int = 100
     var usersPerPage: Int = 20
     var error: Error?
-    
+
     private var isRequestPending = false
     private var debounceTask: Task<Void, Never>?
     private var usersUseCase: FetchUsersUseCase
@@ -42,11 +42,11 @@ class UserListViewModel {
         isRequestPending = false
         isLoadingMore = false
     }
-    
+
     func fetchUsersDebounced(debounceTime: TimeInterval = 0.3) {
         // Cancel previous debounce task if exists
         debounceTask?.cancel()
-        
+
         // Create new debounce task
         debounceTask = Task {
             do {
@@ -59,11 +59,10 @@ class UserListViewModel {
             }
         }
     }
-    
+
     func resetPagination() {
         users = []
         sinceId = 100
         isLoadingMore = false
     }
 }
-

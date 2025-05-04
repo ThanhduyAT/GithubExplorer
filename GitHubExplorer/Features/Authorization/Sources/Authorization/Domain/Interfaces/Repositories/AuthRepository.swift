@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthRepository.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 1/5/25.

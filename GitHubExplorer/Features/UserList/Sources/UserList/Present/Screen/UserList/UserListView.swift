@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  UserListView.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -59,7 +59,7 @@ struct UserListView: View {
             .listStyle(.plain)
         }
     }
-    
+
     // MARK: - Skeleton loading
     private var loadingStateView: some View {
         List {
@@ -71,7 +71,7 @@ struct UserListView: View {
         }
         .listStyle(.plain)
     }
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "person.crop.circle.badge.exclamationmark")
@@ -83,13 +83,8 @@ struct UserListView: View {
             Text("No users found.")
                 .font(.headline)
                 .foregroundColor(.gray)
-            
-            Button(action: {
-                Task {
-                    viewModel.resetPagination()
-                    await viewModel.fetchUsers()
-                }
-            }) {
+
+            Button(action: resetPagination) {
                 Label("Retry", systemImage: "arrow.clockwise")
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
@@ -131,6 +126,13 @@ struct UserListView: View {
     }
 
     // MARK: - Load Methods
+    private func resetPagination() {
+        Task {
+            viewModel.resetPagination()
+            await viewModel.fetchUsers()
+        }
+    }
+
     private func handleInitialLoadIfNeeded() async {
         guard !didAppear else { return }
         didAppear = true
@@ -143,12 +145,12 @@ struct UserListView: View {
             viewModel.fetchUsersDebounced()
         }
     }
-    
+
     private func prefetchImages(for displayedUsers: [User], prefetchCount: Int = 5) {
         // Calculate which images to prefetch
         let currentIndex = displayedUsers.count
         let endIndex = min(currentIndex + prefetchCount, viewModel.users.count)
-        
+
         if currentIndex < endIndex {
             let prefetchUrls = viewModel.users[currentIndex..<endIndex].compactMap { URL(string: $0.avatarUrl) }
 

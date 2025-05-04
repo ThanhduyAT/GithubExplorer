@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserCoordinator.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -14,7 +14,7 @@ import Factory
 public enum UserScreen: Identifiable, Hashable {
     case userList
     case userDetail(userName: String)
-    
+
     public var id: Self { return self }
 }
 
@@ -23,15 +23,15 @@ public enum UserScreen: Identifiable, Hashable {
 public final class UserCoordinator: StackNavigatable {
     // Define the associated type for screen navigation
     public typealias ScreenType = UserScreen
-    
+
     // MARK: - Use Cases
     // Factories to get instances of use cases
     let usersUseCase: UserListFactory = Container.shared
     let userUseCase: UserDetailFactory = Container.shared
-    
+
     // The navigation path for managing the navigation stack
     public var path: NavigationPath = NavigationPath()
-    
+
     // Initializer for the coordinator
     public init() {}
 }
@@ -42,12 +42,12 @@ extension UserCoordinator {
     public func push(_ screen: ScreenType) {
         path.append(screen)
     }
-    
+
     // Pop the most recent screen from the navigation stack
     public func pop() {
         path.removeLast()
     }
-    
+
     // Pop all screens and return to the root of the navigation stack
     public func popToRoot() {
         path.removeLast(path.count)
@@ -65,7 +65,7 @@ extension UserCoordinator {
         case .userList:
             let viewModel = UserListViewModel(factory: usersUseCase)
             UserListView(viewModel: viewModel)
-        
+
         // When the screen is 'userDetail', build the corresponding view with the ViewModel passing the userName
         case let .userDetail(userName):
             let viewModel = UserDetailViewModel(userName: userName, factory: userUseCase)

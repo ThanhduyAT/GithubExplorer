@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  LoginViewModel.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 2/5/25.

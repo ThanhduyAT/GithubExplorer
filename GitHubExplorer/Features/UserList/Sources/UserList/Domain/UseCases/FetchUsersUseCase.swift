@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  FetchUsersUseCase.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -15,18 +15,17 @@ protocol FetchUsersUseCase {
 }
 
 /// Default implementation of `FetchUsersUseCase` using repository pattern.
-public class FetchUsersUseCaseImpl {
+class FetchUsersUseCaseImpl {
     private let userRepository: UserRepository
-    
-    public init(userRepository: UserRepository) {
+
+    init(userRepository: UserRepository) {
         self.userRepository = userRepository
     }
 }
 
 extension FetchUsersUseCaseImpl: FetchUsersUseCase {
     // No need to mark as `mutating` here since this is a class.
-    public func execute(query: UserListQuery) async throws -> [User] {
+    func execute(query: UserListQuery) async throws -> [User] {
         return try await userRepository.fetchUserList(query: query)
     }
 }
-

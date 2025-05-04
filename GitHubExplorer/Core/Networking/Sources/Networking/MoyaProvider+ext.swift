@@ -13,11 +13,12 @@ public class DefaultAlamofireManager: Alamofire.Session, @unchecked Sendable {
         configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 30
         configuration.requestCachePolicy = .useProtocolCachePolicy
-        
+
         // Add URL cache configuration
         let memoryCapacity = 50 * 1024 * 1024 // 50 MB
         let diskCapacity = 100 * 1024 * 1024 // 100 MB
-        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: "github_explorer_cache")
+        let diskPath = "github_explorer_cache"
+        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: diskPath)
         configuration.urlCache = cache
         return Session(configuration: configuration)
     }()
@@ -36,12 +37,10 @@ extension MoyaProvider {
                         let filtered = try response.filterSuccessfulStatusCodes()
                         let decoded = try JSONDecoder().decode(T.self, from: filtered.data)
                         continuation.resume(returning: decoded)
-
                     } catch let moyaError as MoyaError {
                         let error = self.handleMoyaError(moyaError)
                         continuation.resume(throwing: error)
-
-                    } catch let decodingError {
+                    } catch {
                         continuation.resume(throwing: APIError.decodingError)
                     }
 
@@ -52,7 +51,7 @@ extension MoyaProvider {
             }
         }
     }
-    
+
     public func baseRequestWithRetry<T: Decodable>(
         _ target: Target,
         type: T.Type,
@@ -68,7 +67,7 @@ extension MoyaProvider {
             throw error
         }
     }
-    
+
     private func handleMoyaError(_ error: MoyaError) -> APIError {
         if case let .underlying(underlyingError, _) = error {
             if let afError = underlyingError as? AFError,
@@ -78,7 +77,7 @@ extension MoyaProvider {
                 return .networkError
             }
         }
-        
+
         if case let .statusCode(response) = error {
             switch response.statusCode {
             case 400:
@@ -108,5 +107,3 @@ extension MoyaProvider {
         return .unknown(error.localizedDescription)
     }
 }
-
-

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserApiClientImpl.swift
 //  Networking
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -10,7 +10,6 @@ import Moya
 import Networking
 
 struct UserApiClientImpl: UserApiClient {
-
     typealias Target = UserTargetBuilder
 
     // Moya provider for making network requests

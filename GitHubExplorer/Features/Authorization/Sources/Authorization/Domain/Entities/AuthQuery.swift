@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthQuery.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -12,4 +12,3 @@ struct AuthQuery {
     let clientSecret: String
     let code: String
 }
-

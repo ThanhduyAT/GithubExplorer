@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthCoordinator.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 1/5/25.

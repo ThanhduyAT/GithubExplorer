@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserDetail.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -14,7 +14,7 @@ public struct UserDetail: Sendable {
     let location: String
     let followers: Int
     let following: Int
-    
+
     public init(login: String, avatarUrl: String, htmlUrl: String, location: String, followers: Int, following: Int) {
         self.login = login
         self.avatarUrl = avatarUrl

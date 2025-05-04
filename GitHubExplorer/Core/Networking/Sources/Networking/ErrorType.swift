@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ErrorType.swift
 //  Networking
 //
 //  Created by Duy Thanh on 3/5/25.
@@ -28,7 +28,7 @@ public enum APIError: Error, LocalizedError, Equatable {
             return error
         }
     }
-    
+
     public static func == (lhs: APIError, rhs: APIError) -> Bool {
         switch (lhs, rhs) {
         case (.unauthorized, .unauthorized):
@@ -59,5 +59,3 @@ extension APIError {
         }
     }
 }
-
-

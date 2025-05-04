@@ -1,5 +1,5 @@
 //
-//  SwiftUIView.swift
+//  UserCardView.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -12,7 +12,7 @@ struct UserCardView: View {
     let imageString: String
     let username: String
     let detailString: String
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
             KFImage(URL(string: imageString))
@@ -32,19 +32,19 @@ struct UserCardView: View {
                     Circle()
                         .stroke(Color.gray.opacity(0.3), lineWidth: 1)
                 )
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 Text(username)
                     .font(.headline)
                     .foregroundColor(.primary)
-                
+
                 Text(detailString)
                     .font(.subheadline)
                     .foregroundColor(.blue)
                     .underline()
             }
             .padding(.vertical, 8)
-            
+
             Spacer()
         }
         .padding()

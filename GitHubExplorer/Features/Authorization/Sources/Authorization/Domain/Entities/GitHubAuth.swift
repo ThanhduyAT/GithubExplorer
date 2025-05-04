@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  GitHubAuth.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 3/5/25.

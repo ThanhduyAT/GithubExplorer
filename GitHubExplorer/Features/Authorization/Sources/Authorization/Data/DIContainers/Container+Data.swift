@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Container+Data.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 2/5/25.
@@ -8,7 +8,7 @@
 import Foundation
 import Factory
 import Networking
- 
+
 extension Container {
     /// Provides the authentication service, responsible for managing session/token storage.
     var authService: Factory<AuthenticationService> {

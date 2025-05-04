@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  IconView.swift
 //  UserList
 //
 //  Created by Duy Thanh on 2/5/25.
@@ -12,7 +12,7 @@ struct IconView: View {
     var imageName: String
     var count: Int
     var typeName: String
-    
+
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: imageName)
@@ -22,7 +22,6 @@ struct IconView: View {
                 .padding()
                 .background(Color.gray.opacity(0.1))
                 .clipShape(Circle())
-                
 
             Text("\(count)")
                 .font(.headline)

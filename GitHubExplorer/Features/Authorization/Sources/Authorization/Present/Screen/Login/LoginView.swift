@@ -1,5 +1,5 @@
 //
-//  GitHubLoginView.swift
+//  LoginView.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 2/5/25.
@@ -46,27 +46,26 @@ struct LoginView: View {
 
     // MARK: - GitHub Auth
     private func openWebView() {
-        if let url = viewModel.openGitHubLogin() {
-            let scheme = "githubexplorer"
-            let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { callbackURL, error in
-                if let error {
-                    viewModel.error = error
-                    return
-                }
-                
-                if let callbackURL = callbackURL,
-                   let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: true),
-                   let code = components.queryItems?.first(where: { $0.name == "code" })?.value {
-                    // Exchange code for access token here
-                    Task {
-                        await viewModel.performLogin(code: code)
-                    }
+        guard let url = viewModel.openGitHubLogin() else { return }
+        let scheme = "githubexplorer"
+        let session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { callbackURL, error in
+            if let error {
+                viewModel.error = error
+                return
+            }
+
+            if let callbackURL = callbackURL,
+               let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: true),
+               let code = components.queryItems?.first(where: { $0.name == "code" })?.value {
+                // Exchange code for access token here
+                Task {
+                    await viewModel.performLogin(code: code)
                 }
             }
-            
-            session.presentationContextProvider = presentationContextProvider
-            session.start()
         }
+
+        session.presentationContextProvider = presentationContextProvider
+        session.start()
     }
 }
 
