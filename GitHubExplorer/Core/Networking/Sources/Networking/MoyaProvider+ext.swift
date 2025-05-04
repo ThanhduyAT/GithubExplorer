@@ -62,6 +62,7 @@ extension MoyaProvider {
             return try await baseRequest(target, type: type)
         } catch let error as APIError where error.isRetriable && retries > 0 {
             try await _Concurrency.Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
+            // swiftlint:disable:next line_length
             return try await baseRequestWithRetry(target, type: type, retries: retries - 1, retryDelay: retryDelay * 1.5)
         } catch {
             throw error
@@ -81,6 +82,7 @@ extension MoyaProvider {
         if case let .statusCode(response) = error {
             switch response.statusCode {
             case 400:
+                // swiftlint:disable:next line_length
                 return .serverError(statusCode: 400, message: "Bad Request. The server could not understand the request.")
             case 401:
                 return .unauthorized

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UserDetail: Sendable {
+public struct UserDetail: Sendable, Equatable {
     let login: String
     let avatarUrl: String
     let htmlUrl: String

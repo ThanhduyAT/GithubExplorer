@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol UserRepository {
-    func fetchUserList(query: UserListQuery) async throws -> [User]
+public protocol UserRepository {
+    func getUsers(query: UserListQuery) async throws -> [User]
     func getUserDetail(userName: String) async throws -> UserDetail
 }

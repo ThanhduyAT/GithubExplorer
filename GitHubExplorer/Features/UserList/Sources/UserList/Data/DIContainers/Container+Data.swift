@@ -12,7 +12,7 @@ import SwiftData
 import Moya
 
 // MARK: - Dependency Injection Container Extension
-extension Container {
+public extension Container {
     /// Provides an instance of `AuthenticationService`
     var authService: Factory<AuthenticationService> {
         self {

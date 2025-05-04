@@ -13,12 +13,12 @@ public struct AuthorizationRequest {
     let code: String
 }
 
-extension AuthorizationRequest {
-    static func toDTO(query: AuthQuery) -> AuthorizationRequest {
+extension AuthQuery {
+    func toDTO() -> AuthorizationRequest {
         AuthorizationRequest(
-            clientId: query.clientId,
-            clientSecret: query.clientSecret,
-            code: query.code
+            clientId: self.clientId,
+            clientSecret: self.clientSecret,
+            code: self.code
         )
     }
 }

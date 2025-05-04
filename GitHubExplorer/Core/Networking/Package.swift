@@ -28,7 +28,7 @@ let package = Package(
         .target(
             name: "Networking",
             dependencies: [
-                "Common",
+                .product(name: "Common", package: "Common"),
                 .product(name: "Moya", package: "Moya")
             ],
             plugins: [

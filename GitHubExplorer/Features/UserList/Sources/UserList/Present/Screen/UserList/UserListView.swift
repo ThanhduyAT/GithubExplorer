@@ -32,10 +32,7 @@ struct UserListView: View {
                     await viewModel.fetchUsers()
                 }
                 .task {
-                    await handleInitialLoadIfNeeded()
-                }
-                .onAppear {
-                    prefetchImages(for: viewModel.users)
+                    await viewModel.handleInitialLoadIfNeeded()
                 }
                 .errorAlert(error: $viewModel.error)
         }
@@ -84,7 +81,7 @@ struct UserListView: View {
                 .font(.headline)
                 .foregroundColor(.gray)
 
-            Button(action: resetPagination) {
+            Button(action: viewModel.resetPagination) {
                 Label("Retry", systemImage: "arrow.clockwise")
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
@@ -99,7 +96,7 @@ struct UserListView: View {
 
     // MARK: - Sections
     private var userListSection: some View {
-        ForEach(viewModel.users, id: \.id) { user in
+        ForEach(Array(viewModel.users.enumerated()), id: \.element.id) { index, user in
             UserCardView(
                 imageString: user.avatarUrl,
                 username: user.login,
@@ -109,7 +106,8 @@ struct UserListView: View {
                 coordinator.push(.userDetail(userName: user.login))
             }
             .onAppear {
-                handleItemAppear(user: user)
+                viewModel.handleItemAppear(user: user)
+                prefetchImages(for: index)
             }
             .listRowSeparator(.hidden)
         }
@@ -125,36 +123,10 @@ struct UserListView: View {
         }
     }
 
-    // MARK: - Load Methods
-    private func resetPagination() {
-        Task {
-            viewModel.resetPagination()
-            await viewModel.fetchUsers()
-        }
-    }
-
-    private func handleInitialLoadIfNeeded() async {
-        guard !didAppear else { return }
-        didAppear = true
-        await viewModel.fetchUsers()
-    }
-
-    private func handleItemAppear(user: User) {
-        if let index = viewModel.users.firstIndex(where: { $0.id == user.id }),
-           index == viewModel.users.count - 3 {
-            viewModel.fetchUsersDebounced()
-        }
-    }
-
-    private func prefetchImages(for displayedUsers: [User], prefetchCount: Int = 5) {
-        // Calculate which images to prefetch
-        let currentIndex = displayedUsers.count
-        let endIndex = min(currentIndex + prefetchCount, viewModel.users.count)
-
-        if currentIndex < endIndex {
-            let prefetchUrls = viewModel.users[currentIndex..<endIndex].compactMap { URL(string: $0.avatarUrl) }
-
-            // Prefetch images
+    // MARK: - Prefetch images
+    private func prefetchImages(for displayedIndex: Int, prefetchCount: Int = 5) {
+        let prefetchUrls = viewModel.prefetchImages(for: displayedIndex, prefetchCount: prefetchCount)
+        if !prefetchUrls.isEmpty {
             ImagePrefetcher(urls: Array(prefetchUrls)).start()
         }
     }

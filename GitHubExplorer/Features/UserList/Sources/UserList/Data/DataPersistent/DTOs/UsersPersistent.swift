@@ -20,7 +20,9 @@ import SwiftData
         self.avatarUrl = user.avatarUrl
         self.htmlUrl = user.htmlUrl
     }
+}
 
+extension UserPersistent {
     func toDomain() -> User {
         return User(
             id: self.id,

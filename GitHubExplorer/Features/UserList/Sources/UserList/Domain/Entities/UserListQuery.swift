@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserListQuery: Sendable, Equatable {
+public struct UserListQuery: Sendable, Equatable {
     let since: String
     let perPage: String
 }

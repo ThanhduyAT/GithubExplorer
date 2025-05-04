@@ -9,16 +9,13 @@ import Foundation
 
 @MainActor
 @Observable class UserDetailViewModel {
-
-    // MARK: - Input
+    // MARK: - Public Properties
     let userName: String
-
-    // MARK: - Output
     var user: UserDetail?
     var isLoading: Bool = false
     var error: Error?
 
-    // MARK: - Dependencies
+    // MARK: - Private Properties
     private var userUsecase: GetUserDetailUseCase
 
     // MARK: - Init

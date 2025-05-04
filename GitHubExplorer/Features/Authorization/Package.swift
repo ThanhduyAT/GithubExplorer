@@ -35,7 +35,8 @@ let package = Package(
             name: "Authorization",
             dependencies: [
                 "Networking",
-                "Common",
+                .product(name: "CommonUI", package: "Common"),
+                .product(name: "Common", package: "Common"),
                 .product(
                     name: "Factory",
                     package: "Factory"

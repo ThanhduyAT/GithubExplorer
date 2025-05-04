@@ -26,6 +26,6 @@ class FetchUsersUseCaseImpl {
 extension FetchUsersUseCaseImpl: FetchUsersUseCase {
     // No need to mark as `mutating` here since this is a class.
     func execute(query: UserListQuery) async throws -> [User] {
-        return try await userRepository.fetchUserList(query: query)
+        return try await userRepository.getUsers(query: query)
     }
 }
