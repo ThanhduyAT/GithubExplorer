@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Authorization
+import Networking
 
 struct AppCoordinatorView: View {
     var body: some View {
