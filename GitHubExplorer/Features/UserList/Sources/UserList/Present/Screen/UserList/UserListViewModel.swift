@@ -18,7 +18,7 @@ class UserListViewModel {
     var sinceId: Int = 100
     private(set) var usersPerPage: Int = 20
     private(set) var didAppear = false
-    
+
     // MARK: - Private Properties
     private var debounceTask: Task<Void, Never>?
     private var usersUseCase: FetchUsersUseCase

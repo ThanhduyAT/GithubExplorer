@@ -1,0 +1,4 @@
+ENV = PRODUCTION
+BASE_URL = api.github.com
+APP_NAME = GithubExplorer
+APP_BUNDLE_ID = duythanh.com.GitHubExplorer

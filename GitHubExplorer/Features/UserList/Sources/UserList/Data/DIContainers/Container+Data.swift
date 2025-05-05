@@ -10,6 +10,7 @@ import Factory
 import Networking
 import SwiftData
 import Moya
+import Common
 
 // MARK: - Dependency Injection Container Extension
 public extension Container {
@@ -65,8 +66,8 @@ public extension Container {
                 // Inject latest token into request headers
                 return self.lastedToken ?? ""
             }
-
-            return UserApiClientImpl(plugins: [authPlugin])
+            let baseURL = EnvironmentValues.baseUrl
+            return UserApiClientImpl(baseURL: baseURL, plugins: [authPlugin])
         }
     }
 

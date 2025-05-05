@@ -69,6 +69,7 @@ extension MoyaProvider {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func handleMoyaError(_ error: MoyaError) -> APIError {
         if case let .underlying(underlyingError, _) = error {
             if let afError = underlyingError as? AFError,
