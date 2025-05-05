@@ -14,22 +14,6 @@ import Common
 
 // MARK: - Dependency Injection Container Extension
 public extension Container {
-    /// Provides an instance of `AuthenticationService`
-    var authService: Factory<AuthenticationService> {
-        self {
-            AuthenticationService()
-        }
-    }
-
-    /// Retrieves the latest stored access token from the authentication service
-    var lastedToken: String? {
-        do {
-            return try self.authService().getToken()
-        } catch {
-            return nil
-        }
-    }
-
     /// Provides a configured `ModelContainer` for SwiftData persistence
     var modelContainer: Factory<ModelContainer> {
         self {
@@ -62,12 +46,8 @@ public extension Container {
     /// Provides a configured `UserApiClient` with authentication plugin
     var userApiClient: Factory<UserApiClient> {
         self {
-            let authPlugin = AccessTokenPlugin { _ in
-                // Inject latest token into request headers
-                return self.lastedToken ?? ""
-            }
             let baseURL = EnvironmentValues.baseUrl
-            return UserApiClientImpl(baseURL: baseURL, plugins: [authPlugin])
+            return UserApiClientImpl(baseURL: baseURL)
         }
     }
 
