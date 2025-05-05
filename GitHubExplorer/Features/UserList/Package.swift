@@ -26,7 +26,8 @@ let package = Package(
             name: "UserList",
             dependencies: [
                 "Networking",
-                "Common",
+                .product(name: "CommonUI", package: "Common"),
+                .product(name: "Common", package: "Common"),
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "Kingfisher", package: "Kingfisher")
             ],
@@ -36,7 +37,11 @@ let package = Package(
         ),
         .testTarget(
             name: "UserListTests",
-            dependencies: ["UserList"]
+            dependencies: [
+                .product(name: "CommonUI", package: "Common"),
+                "UserList",
+                .product(name: "Factory", package: "Factory")
+            ]
         ),
     ]
 )

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthRepositoryImpl.swift
 //  Authorization
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -12,7 +12,7 @@ final class AuthRepositoryImpl {
     private let apiClient: AuthorizationApiClient
     private let authService: AuthenticationService
     private let clientID = "Ov23lizYkFm5LQFq01yf"
-    
+
     public init(apiClient: AuthorizationApiClient, authService: AuthenticationService) {
         self.apiClient = apiClient
         self.authService = authService
@@ -21,12 +21,18 @@ final class AuthRepositoryImpl {
 
 extension AuthRepositoryImpl: AuthRepository {
     func openGitHubLogin() -> URL? {
-        let redirectURI = "githubexplorer://auth"
-        let scope = "user"
-        let authURL = "https://github.com/login/oauth/authorize?client_id=\(clientID)&redirect_uri=\(redirectURI)&scope=\(scope)"
-        return URL(string: authURL)
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "github.com"
+        components.path = "/login/oauth/authorize"
+        components.queryItems = [
+            URLQueryItem(name: "client_id", value: clientID),
+            URLQueryItem(name: "redirect_uri", value: "githubexplorer://auth"),
+            URLQueryItem(name: "scope", value: "user")
+        ]
+        return components.url
     }
-    
+
     func exchangeCodeForAccessToken(code: String) async throws {
         let request = AuthorizationRequest(
             clientId: "Ov23lizYkFm5LQFq01yf",
@@ -35,7 +41,6 @@ extension AuthRepositoryImpl: AuthRepository {
         )
         let result = try await apiClient.getAccessToken(request: request)
         if let accessToken = result.accessToken {
-            print("accessToken", accessToken)
             try authService.saveToken(accessToken)
         }
     }

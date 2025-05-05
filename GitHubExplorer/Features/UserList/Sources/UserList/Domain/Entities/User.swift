@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  User.swift
 //  UserList
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -13,7 +13,7 @@ public struct User: Identifiable, Sendable {
     let login: String
     let avatarUrl: String
     let htmlUrl: String
-    
+
     public init(id: Int, login: String, avatarUrl: String, htmlUrl: String) {
         self.id = id
         self.login = login

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserApiClientImpl.swift
 //  Networking
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -10,18 +10,18 @@ import Moya
 import Networking
 
 struct UserApiClientImpl: UserApiClient {
-
     typealias Target = UserTargetBuilder
 
     // Moya provider for making network requests
     var moyaProvider: MoyaProvider<Target>
 
     // DUYFIXME
-    private let baseURL: URL = URL(string: "https://api.github.com")!
+    private let baseURL: URL
 
     // MARK: - Initializer
 
     init(
+        baseURL: URL,
         endpointClosure: @escaping MoyaProvider<Target>.EndpointClosure = MoyaProvider<Target>.defaultEndpointMapping,
         requestClosure: @escaping MoyaProvider<Target>.RequestClosure = MoyaProvider<Target>.defaultRequestMapping,
         stubClosure: @escaping MoyaProvider<Target>.StubClosure = MoyaProvider<Target>.neverStub,
@@ -29,6 +29,7 @@ struct UserApiClientImpl: UserApiClient {
         plugins: [PluginType] = [],
         trackInflights: Bool = false
     ) {
+        self.baseURL = baseURL
         self.moyaProvider = MoyaProvider(
             endpointClosure: endpointClosure,
             requestClosure: requestClosure,

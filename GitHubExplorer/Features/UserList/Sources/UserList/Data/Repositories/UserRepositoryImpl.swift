@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserRepositoryImpl.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -25,7 +25,7 @@ final class UserRepositoryImpl {
 extension UserRepositoryImpl: UserRepository {
 
     // MARK: - Fetch User List
-    public func fetchUserList(query: UserListQuery) async throws -> [User] {
+    public func getUsers(query: UserListQuery) async throws -> [User] {
         do {
             // Attempt to fetch users from local storage
             let usersStorage = try await localStorage.fetchUsers()
@@ -36,9 +36,9 @@ extension UserRepositoryImpl: UserRepository {
             }
 
             // Fetch users from API if not found in local storage or if additional users are needed
-            let usersData = try await apiClient.getUsers(request: UserListRequest.toDTO(query: query))
+            let usersData = try await apiClient.getUsers(request: query.toDTO())
             let users = usersData.compactMap { $0.toDomain() }
-            
+
             // If local storage has fewer than 40 users, save the fetched users to storage
             if usersStorage.count < 40 {
                 try await localStorage.saveUsers(users)

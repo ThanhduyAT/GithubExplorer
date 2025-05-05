@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthorizationTargetBuilder.swift
 //  Networking
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -80,7 +80,7 @@ struct AuthorizationTargetBuilder: TargetType, AccessTokenAuthorizable {
     }
 
     /// Type of authorization needed for the request.
-    public var authorizationType: AuthorizationType? = nil
+    public var authorizationType: AuthorizationType?
 }
 
 // MARK: - Supported Operations

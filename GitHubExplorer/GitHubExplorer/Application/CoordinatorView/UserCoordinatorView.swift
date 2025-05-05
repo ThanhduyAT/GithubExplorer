@@ -1,5 +1,5 @@
 //
-//  HomeCoordinatorView.swift
+//  UserCoordinatorView.swift
 //  GitHubExplorer
 //
 //  Created by Duy Thanh on 2/5/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import UserList
 
-struct HomeCoordinatorView: View {
+struct UserCoordinatorView: View {
     @State private var userCoordinator = UserCoordinator()
     
     var body: some View {

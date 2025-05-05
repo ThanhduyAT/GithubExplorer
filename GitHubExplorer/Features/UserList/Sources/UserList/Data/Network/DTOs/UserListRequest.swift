@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserListRequest.swift
 //  Networking
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -12,11 +12,11 @@ public struct UserListRequest {
     let perPage: String
 }
 
-extension UserListRequest {
-    static func toDTO(query: UserListQuery) -> UserListRequest {
+extension UserListQuery {
+    func toDTO() -> UserListRequest {
         UserListRequest(
-            since: query.since,
-            perPage: query.perPage
+            since: self.since,
+            perPage: self.perPage
         )
     }
 }

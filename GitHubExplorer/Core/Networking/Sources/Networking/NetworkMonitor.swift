@@ -11,17 +11,17 @@ import Network
 public class NetworkMonitor: @unchecked Sendable {
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "NetworkMonitor")
-    
+
     public private(set) var isConnected = true
     public private(set) var connectionType: ConnectionType = .unknown
-    
+
     public enum ConnectionType {
         case wifi
         case cellular
         case wired
         case unknown
     }
-    
+
     public init() {
         monitor.pathUpdateHandler = { [weak self] path in
             DispatchQueue.main.async {
@@ -31,7 +31,7 @@ public class NetworkMonitor: @unchecked Sendable {
         }
         monitor.start(queue: queue)
     }
-    
+
     private func updateConnectionType(_ path: NWPath) {
         if path.usesInterfaceType(.wifi) {
             connectionType = .wifi
@@ -43,7 +43,7 @@ public class NetworkMonitor: @unchecked Sendable {
             connectionType = .unknown
         }
     }
-    
+
     deinit {
         monitor.cancel()
     }

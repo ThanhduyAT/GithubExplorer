@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthorizationApiClientImpl.swift
 //  Networking
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -43,14 +43,14 @@ struct AuthorizationApiClientImpl: AuthorizationApiClient {
         let result = try await moyaProvider.baseRequest(target, type: AuthorizationResponse.self)
         return result
     }
-    
+
     func getGitHubDeviceCode(clientId: String) async throws -> GitHubDeviceCodeResponse {
         let baseURL = URL(string: "https://github.com")!
         let target = Target(operation: .getDeviceCode(clientId: clientId), baseURL: baseURL)
         let result = try await moyaProvider.baseRequest(target, type: GitHubDeviceCodeResponse.self)
         return result
     }
-    
+
     func pollForAccessToken(clientId: String, deviceCode: String) async throws -> GitHubAccessTokenResponse {
         let baseURL = URL(string: "https://github.com")!
         let target = Target(operation: .pollAccessToken(clientId: clientId, deviceCode: deviceCode), baseURL: baseURL)

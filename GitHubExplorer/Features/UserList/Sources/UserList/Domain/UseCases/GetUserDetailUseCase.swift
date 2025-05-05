@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  GetUserDetailUseCase.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -17,7 +17,7 @@ protocol GetUserDetailUseCase {
 /// Default implementation of `GetUserDetailUseCase` using repository pattern.
 class GetUserDetailUseCaseImpl {
     private let userRepository: UserRepository
-    
+
     public init(userRepository: UserRepository) {
         self.userRepository = userRepository
     }

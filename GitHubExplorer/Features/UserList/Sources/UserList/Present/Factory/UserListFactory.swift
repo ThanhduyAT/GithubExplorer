@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserListFactory.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -21,5 +21,3 @@ extension Container: UserListFactory {
         return usersUseCase.shared()  // Assuming 'usersUseCase' is a shared instance
     }
 }
-
-

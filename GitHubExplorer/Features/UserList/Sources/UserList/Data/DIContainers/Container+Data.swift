@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Container+Data.swift
 //  UserList
 //
 //  Created by Duy Thanh on 2/5/25.
@@ -10,9 +10,10 @@ import Factory
 import Networking
 import SwiftData
 import Moya
+import Common
 
 // MARK: - Dependency Injection Container Extension
-extension Container {
+public extension Container {
     /// Provides an instance of `AuthenticationService`
     var authService: Factory<AuthenticationService> {
         self {
@@ -65,8 +66,8 @@ extension Container {
                 // Inject latest token into request headers
                 return self.lastedToken ?? ""
             }
-
-            return UserApiClientImpl(plugins: [authPlugin])
+            let baseURL = EnvironmentValues.baseUrl
+            return UserApiClientImpl(baseURL: baseURL, plugins: [authPlugin])
         }
     }
 

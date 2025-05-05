@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  UserPersistent.swift
 //  UserList
 //
 //  Created by Duy Thanh on 1/5/25.
@@ -20,7 +20,9 @@ import SwiftData
         self.avatarUrl = user.avatarUrl
         self.htmlUrl = user.htmlUrl
     }
+}
 
+extension UserPersistent {
     func toDomain() -> User {
         return User(
             id: self.id,

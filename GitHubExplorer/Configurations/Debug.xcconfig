@@ -1,0 +1,4 @@
+ENV = DEBUG
+BASE_URL = api.github.com
+APP_NAME = GithubExplorer-DEBUG
+APP_BUNDLE_ID = duythanh.com.GitHubExplorer-Debug

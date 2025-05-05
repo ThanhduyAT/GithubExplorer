@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AuthorizationResponse.swift
 //  Networking
 //
 //  Created by Duy Thanh on 30/4/25.
@@ -11,7 +11,7 @@ struct AuthorizationResponse: Decodable {
     let accessToken: String?
     let scope: String?
     let tokenType: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
         case scope

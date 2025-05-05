@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		631BF88B2DC369AF002ECA84 /* UserList in Frameworks */ = {isa = PBXBuildFile; productRef = 631BF88A2DC369AF002ECA84 /* UserList */; };
-		631BF88D2DC369B6002ECA84 /* Authorization in Frameworks */ = {isa = PBXBuildFile; productRef = 631BF88C2DC369B6002ECA84 /* Authorization */; };
 		63428E402DC36E99001A37DB /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 63428E3F2DC36E99001A37DB /* Factory */; };
 		63BB42EB2DC2489E00E49722 /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 63BB42EA2DC2489E00E49722 /* Common */; };
 		63BB42ED2DC248A100E49722 /* CommonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 63BB42EC2DC248A100E49722 /* CommonUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6301BD902DC22169009A1B7A /* Authorization */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Authorization; sourceTree = "<group>"; };
 		6301BD912DC221A2009A1B7A /* UserList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UserList; sourceTree = "<group>"; };
 		6301BD9E2DC22558009A1B7A /* Common */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Common; sourceTree = "<group>"; };
 		6301BD9F2DC225DA009A1B7A /* Networking */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Networking; sourceTree = "<group>"; };
 		6336141F2DC217850063C6DB /* GitHubExplorer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubExplorer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		63BCB62D2DC7B0AB005A6081 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
+		63BCB64D2DC8F5A8005A6081 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -51,7 +51,6 @@
 				63BB42EB2DC2489E00E49722 /* Common in Frameworks */,
 				63428E402DC36E99001A37DB /* Factory in Frameworks */,
 				63BB42ED2DC248A100E49722 /* CommonUI in Frameworks */,
-				631BF88D2DC369B6002ECA84 /* Authorization in Frameworks */,
 				631BF88B2DC369AF002ECA84 /* UserList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -62,6 +61,7 @@
 		633614162DC217850063C6DB = {
 			isa = PBXGroup;
 			children = (
+				63BCB62C2DC7AFAA005A6081 /* Configurations */,
 				633614642DC21A580063C6DB /* Features */,
 				63F821952DC5238A00154450 /* Core */,
 				633614212DC217850063C6DB /* GitHubExplorer */,
@@ -82,7 +82,6 @@
 			isa = PBXGroup;
 			children = (
 				6301BD912DC221A2009A1B7A /* UserList */,
-				6301BD902DC22169009A1B7A /* Authorization */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -92,6 +91,15 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		63BCB62C2DC7AFAA005A6081 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				63BCB64D2DC8F5A8005A6081 /* Debug.xcconfig */,
+				63BCB62D2DC7B0AB005A6081 /* Production.xcconfig */,
+			);
+			path = Configurations;
 			sourceTree = "<group>";
 		};
 		63F821952DC5238A00154450 /* Core */ = {
@@ -127,7 +135,6 @@
 				63BB42EA2DC2489E00E49722 /* Common */,
 				63BB42EC2DC248A100E49722 /* CommonUI */,
 				631BF88A2DC369AF002ECA84 /* UserList */,
-				631BF88C2DC369B6002ECA84 /* Authorization */,
 				63428E3F2DC36E99001A37DB /* Factory */,
 			);
 			productName = GitHubExplorer;
@@ -202,6 +209,7 @@
 /* Begin XCBuildConfiguration section */
 		633614432DC217870063C6DB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 63BCB64D2DC8F5A8005A6081 /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -265,6 +273,7 @@
 		};
 		633614442DC217870063C6DB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 63BCB62D2DC7B0AB005A6081 /* Production.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -321,6 +330,7 @@
 		};
 		633614462DC217870063C6DB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 63BCB64D2DC8F5A8005A6081 /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -342,7 +352,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = duythanh.com.GitHubExplorer;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -352,6 +362,7 @@
 		};
 		633614472DC217870063C6DB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 63BCB62D2DC7B0AB005A6081 /* Production.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -373,7 +384,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = duythanh.com.GitHubExplorer;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -427,10 +438,6 @@
 		631BF88A2DC369AF002ECA84 /* UserList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UserList;
-		};
-		631BF88C2DC369B6002ECA84 /* Authorization */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Authorization;
 		};
 		63428E3F2DC36E99001A37DB /* Factory */ = {
 			isa = XCSwiftPackageProductDependency;
