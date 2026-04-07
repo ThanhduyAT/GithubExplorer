@@ -59,6 +59,7 @@ extension MoyaProvider {
         retryDelay: TimeInterval = 1.0
     ) async throws -> T {
         do {
+            try _Concurrency.Task.checkCancellation()
             return try await baseRequest(target, type: type)
         } catch let error as APIError where error.isRetriable && retries > 0 {
             try await _Concurrency.Task.sleep(nanoseconds: UInt64(retryDelay * 1_000_000_000))
@@ -79,34 +80,17 @@ extension MoyaProvider {
                 return .networkError
             }
         }
-
-        if case let .statusCode(response) = error {
-            switch response.statusCode {
-            case 400:
-                // swiftlint:disable:next line_length
-                return .serverError(statusCode: 400, message: "Bad Request. The server could not understand the request.")
-            case 401:
-                return .unauthorized
-            case 403:
-                return .serverError(statusCode: 403, message: "Access is forbidden.")
-            case 404:
-                return .serverError(statusCode: 404, message: "The requested resource was not found.")
-            case 408:
-                return .serverError(statusCode: 408, message: "Request timed out.")
-            case 422:
-                return .serverError(statusCode: 422, message: "Unprocessable Entity.")
-            case 500:
-                return .serverError(statusCode: 500, message: "Internal Server Error.")
-            case 502:
-                return .serverError(statusCode: 502, message: "Bad Gateway.")
-            case 503:
-                return .serverError(statusCode: 503, message: "Service Unavailable.")
-            case 504:
-                return .serverError(statusCode: 504, message: "Gateway Timeout.")
-            default:
-                return .unknown(error.localizedDescription)
-            }
+        switch error {
+        case 401:
+            return .unauthorized
+        case 404:
+            return .decodingError
+        case 500:
+            return .networkError
+        case 400...499:
+            return .serverError
+        default:
+            return .unknown(error.localizedDescription)
         }
-        return .unknown(error.localizedDescription)
     }
 }
